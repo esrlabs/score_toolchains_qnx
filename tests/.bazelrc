@@ -1,0 +1,4 @@
+build:x86_64_qnx --incompatible_strict_action_env
+build:x86_64_qnx --platforms=@score_toolchains_qnx//:x86_64_qnx
+build:x86_64_qnx --sandbox_writable_path=/var/tmp
+
