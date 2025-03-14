@@ -40,3 +40,28 @@ The archive of this directory is the input for the toolchain_qcc extension.
 
 It is currently assumed that the license is deployed to ```/opt/score_qnx/license/licenses```.
 By default QNX tooling installs the license in ```~/.qnx/license/licenses```.
+
+## Using pre-packaged QNX 8.0 SDP
+
+Pre-packaged SDP requires authentication with ones QNX login and password.
+For this the ```tools/qnx_credential_helper.py``` needs to be used.
+
+The credential helper is a standalone application and cannot be referenced as Bazel target.
+For this the credential helper needs to be put:
+
+- as an absolute path:
+```
+common --credential_helper=*.qnx.com=/path/to/qnx_credential_helper.py
+```
+
+- in $PATH and referenced as:
+```
+common --credential_helper=*.qnx.com=qnx_credential_helper.py
+```
+
+- in your module source and referenced as:
+```
+common --credential_helper=*.qnx.com=%worksapce%/path/to/qnx_credential_helper.py
+```
+
+The credentials are taken from .netrc or from enviroment variables ```SCORE_QNX_LOGIN``` and ```SCORE_QNX_PASSWORD```.
