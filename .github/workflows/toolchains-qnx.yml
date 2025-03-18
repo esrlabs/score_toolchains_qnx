@@ -10,12 +10,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-name: Toolchains QNX CI
+name: Toolchains QNX
 on:
   pull_request:
     types: [opened, reopened, synchronize]
 jobs:
-  code:
+  toolchains-qnx-build-all:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
