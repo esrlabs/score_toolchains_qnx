@@ -10,12 +10,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-name: Toolchains QNX Tests CI
+name: Toolchains QNX Tests
 on:
   pull_request:
     types: [opened, reopened, synchronize]
 jobs:
-  code:
+  toolchains-qnx-tests-build-all:
     runs-on: ubuntu-latest
     defaults:
       run:
