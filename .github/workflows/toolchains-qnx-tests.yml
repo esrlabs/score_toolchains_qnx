@@ -1,0 +1,44 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+name: Toolchains QNX Tests CI
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+jobs:
+  code:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.14.0
+      - name: Setup QNX License
+        env:
+          SCORE_QNX_LICENSE: ${{ secrets.SCORE_QNX_LICENSE }}
+        run: |
+          mkdir -p /opt/score_qnx/license
+          echo "${SCORE_QNX_LICENSE}" | base64 --decode > /opt/score_qnx/license/licenses
+      - name: Run build
+        env:
+          SCORE_QNX_LOGIN: ${{ secrets.SCORE_QNX_USER }}
+          SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
+        run: |
+          bazel build //... --config=x86_64_qnx --credential_helper=*.qnx.com=${{ github.workspace }}/tools/qnx_credential_helper.py
+      - name: Cleanup QNX License
+        if: always()
+        run: |
+          rm -rf /opt/score_qnx
+          rm -rf "${HOME}/.cache/bazel"
