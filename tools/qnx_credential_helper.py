@@ -33,8 +33,8 @@ if __name__ == "__main__":
         eprint("Unsupported domain")
         sys.exit(1)
 
-    if "SCORE_QNX_LOGIN" in os.environ and "SCORE_QNX_PASSWORD" in os.environ:
-        login = os.environ["SCORE_QNX_LOGIN"]
+    if "SCORE_QNX_USER" in os.environ and "SCORE_QNX_PASSWORD" in os.environ:
+        login = os.environ["SCORE_QNX_USER"]
         password = os.environ["SCORE_QNX_PASSWORD"]
     else:
         try:
