@@ -64,4 +64,4 @@ common --credential_helper=*.qnx.com=qnx_credential_helper.py
 common --credential_helper=*.qnx.com=%worksapce%/path/to/qnx_credential_helper.py
 ```
 
-The credentials are taken from .netrc or from enviroment variables ```SCORE_QNX_LOGIN``` and ```SCORE_QNX_PASSWORD```.
+The credentials are taken from .netrc or from enviroment variables ```SCORE_QNX_USER``` and ```SCORE_QNX_PASSWORD```.
