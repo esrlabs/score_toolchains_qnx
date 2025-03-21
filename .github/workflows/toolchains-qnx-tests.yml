@@ -14,8 +14,6 @@ name: Toolchains QNX Tests
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-  merge_group:
-    types: [checks_requested]
 jobs:
   toolchains-qnx-tests-build-all:
     runs-on: ubuntu-latest
