@@ -19,6 +19,7 @@ on:
 jobs:
   toolchains-qnx-tests-build-all:
     runs-on: ubuntu-latest
+    environment: workflow-approval
     defaults:
       run:
         working-directory: ./tests
