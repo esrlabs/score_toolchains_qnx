@@ -49,11 +49,9 @@ if __name__ == "__main__":
             eprint("Failed getting credentials from .netrc")
             sys.exit(1)
 
-    data = urllib.parse.urlencode({
-        "userlogin": login,
-        "password": password,
-        "UseCookie": "1"
-    })
+    data = urllib.parse.urlencode(
+        {"userlogin": login, "password": password, "UseCookie": "1"}
+    )
     data = data.encode("ascii")
 
     cookie_jar = http.cookiejar.CookieJar()
@@ -72,8 +70,12 @@ if __name__ == "__main__":
         sys.exit(1)
 
     myQNX = cookies["myQNX"]
-    print(json.dumps({
-        "headers": {
-            "Cookie": [f"myQNX={myQNX}"],
-        }
-    }))
+    print(
+        json.dumps(
+            {
+                "headers": {
+                    "Cookie": [f"myQNX={myQNX}"],
+                }
+            }
+        )
+    )

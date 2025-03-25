@@ -25,8 +25,8 @@ local_path_override(
 toolchain_qcc = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchain_qcc")
 toolchain_qcc.sdp(
     sha256 = "f2e0cb21c6baddbcb65f6a70610ce498e7685de8ea2e0f1648f01b327f6bac63",
-    url = "https://www.qnx.com/download/download/79858/installation.tgz",
     strip_prefix = "installation",
+    url = "https://www.qnx.com/download/download/79858/installation.tgz",
 )
 use_repo(toolchain_qcc, "toolchain_qcc_sdp")
 use_repo(toolchain_qcc, "toolchain_qcc")
