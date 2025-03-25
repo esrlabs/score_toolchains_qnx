@@ -27,3 +27,6 @@ jobs:
       - name: Run build
         run: |
           bazel build //...
+      - name: Run copyright check
+        run: |
+          bazel run //:copyright.check
