@@ -21,6 +21,16 @@ platform(
     visibility = ["//visibility:public"],
 )
 
+test_suite(
+    name = "format.check",
+    tests = ["//tools/format:format.check"],
+)
+
+alias(
+    name = "format.fix",
+    actual = "//tools/format:format.fix",
+)
+
 copyright_checker(
     name = "copyright",
     srcs = [
@@ -33,8 +43,17 @@ copyright_checker(
     ] + glob([
         "*.bzl",
     ]),
+    config = "@score_cr_checker//resources:config",
     offset = 24,
     template = "@score_cr_checker//resources:templates",
-    config = "@score_cr_checker//resources:config",
     visibility = ["//visibility:public"],
+)
+
+exports_files(
+    [
+        "MODULE.bazel",
+    ],
+    visibility = [
+        "//tools/format:__pkg__",
+    ],
 )

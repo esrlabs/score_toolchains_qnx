@@ -30,3 +30,6 @@ jobs:
       - name: Run copyright check
         run: |
           bazel run //:copyright.check
+      - name: Run formatting check
+        run: |
+          bazel test //:format.check
