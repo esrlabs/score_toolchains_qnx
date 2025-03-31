@@ -12,6 +12,5 @@
 # *******************************************************************************
 exports_files([
     "cc_toolchain_config.bzl",
-    "sdp.BUILD",
     "toolchain.BUILD",
 ])

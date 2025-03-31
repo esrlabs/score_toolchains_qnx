@@ -25,15 +25,15 @@ def _impl(rctx):
         {},
     )
 
-qnx_toolchain = repository_rule(
+qcc_toolchain = repository_rule(
     implementation = _impl,
     attrs = {
         "sdp_repo": attr.string(),
         "_cc_toolchain_config_bzl": attr.label(
-            default = "//toolchain:cc_toolchain_config.bzl",
+            default = "//toolchains/qcc:cc_toolchain_config.bzl",
         ),
         "_cc_tolchain_build": attr.label(
-            default = "//toolchain:toolchain.BUILD",
+            default = "//toolchains/qcc:toolchain.BUILD",
         ),
     },
 )
