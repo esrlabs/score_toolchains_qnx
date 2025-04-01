@@ -10,7 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-def _impl(rctx):
+def _qcc_toolchain_impl(rctx):
     rctx.template(
         "BUILD",
         rctx.attr._cc_tolchain_build,
@@ -26,7 +26,7 @@ def _impl(rctx):
     )
 
 qcc_toolchain = repository_rule(
-    implementation = _impl,
+    implementation = _qcc_toolchain_impl,
     attrs = {
         "sdp_repo": attr.string(),
         "_cc_toolchain_config_bzl": attr.label(
@@ -34,6 +34,25 @@ qcc_toolchain = repository_rule(
         ),
         "_cc_tolchain_build": attr.label(
             default = "//toolchains/qcc:toolchain.BUILD",
+        ),
+    },
+)
+
+def _ifs_toolchain_impl(rctx):
+    rctx.template(
+        "BUILD",
+        rctx.attr._ifs_tolchain_build,
+        {
+            "%{toolchain_sdp}": rctx.attr.sdp_repo,
+        },
+    )
+
+ifs_toolchain = repository_rule(
+    implementation = _ifs_toolchain_impl,
+    attrs = {
+        "sdp_repo": attr.string(),
+        "_ifs_tolchain_build": attr.label(
+            default = "//toolchains/fs/ifs:ifs.BUILD",
         ),
     },
 )

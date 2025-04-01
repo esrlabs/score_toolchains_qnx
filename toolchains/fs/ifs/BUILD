@@ -10,34 +10,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+exports_files(["ifs.BUILD"])
 
-load("@score_toolchains_qnx//rules/fs:ifs.bzl", "qnx_ifs")
-
-cc_binary(
-    name = "main_cpp",
-    srcs = ["main.cpp"],
-)
-
-cc_binary(
-    name = "main_c",
-    srcs = ["main.c"],
-)
-
-qnx_ifs(
-    name = "init",
-    build_file = "init.build",
-)
-
-sh_binary(
-    name = "run_qemu",
-    srcs = ["run_qemu.sh"],
-    args = [
-        "$(location @toolchains_qnx_sdp//:host_dir)",
-        "$(location :init)",
-    ],
-    data = [
-        ":init",
-        "@toolchains_qnx_sdp//:host_all",
-        "@toolchains_qnx_sdp//:host_dir",
-    ],
+toolchain_type(
+    name = "toolchain_type",
+    visibility = ["//visibility:public"],
 )

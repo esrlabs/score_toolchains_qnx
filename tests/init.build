@@ -1,0 +1,56 @@
+###############################################################################
+#
+# Example image built based on minimal configuration from QNX 
+#
+###############################################################################
+
+[image=0x1400000]
+[virtual=x86_64,multiboot] boot = {
+    # Use startup-x86 by default
+    startup-x86 -v -D8250..115200 -zz
+    PATH=/proc/boot
+    LD_LIBRARY_PATH=/proc/boot
+    procnto-smp-instr
+}
+
+[+script] startup-script = {
+    display_msg Welcome to QNX OS 8.0 on x86_64 tweaked for S-CORE! 
+    # These env variables get inherited by all programs which follow
+    SYSNAME=nto
+    TERM=qansi
+    devc-ser8250 &
+    reopen /dev/ser1
+    [+session] /bin/sh &
+}
+
+# shared libraries
+/usr/lib/ldqnx-64.so.2=ldqnx-64.so.2
+libc.so
+libfsnotify.so.1
+libgcc_s.so.1
+libm.so
+libsecpol.so.1
+libtracelog.so.1
+libz.so
+
+# tools
+ksh
+pidin
+shutdown
+toybox
+
+# drivers
+devc-ser8250
+
+# links
+[type=link] /bin/sh=/proc/boot/ksh
+[type=link] /tmp=/dev/shmem
+[type=link] cat=toybox
+[type=link] chmod=toybox
+[type=link] dd=toybox
+[type=link] echo=toybox
+[type=link] grep=toybox 
+[type=link] ln=toybox
+[type=link] ls=toybox
+[type=link] rm=toybox
+

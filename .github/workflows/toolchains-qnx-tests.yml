@@ -38,6 +38,17 @@ jobs:
           SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
         run: |
           bazel build //... --config=x86_64-qnx --credential_helper=*.qnx.com=${{ github.workspace }}/tools/qnx_credential_helper.py
+      - name: Install qemu
+        run: |
+          sudo apt install -y qemu-system
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run qemu
+        run: |
+          bazel run --config=x86_64-qnx //:run_qemu
       - name: Cleanup QNX License
         if: always()
         run: |
