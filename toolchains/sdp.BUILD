@@ -49,11 +49,26 @@ filegroup(
 )
 
 filegroup(
+    name = "host_all",
+    srcs = glob(["host/linux/x86_64/**/*"]),
+)
+
+filegroup(
     name = "host_dir",
     srcs = ["host/linux/x86_64"],
 )
 
 filegroup(
+    name = "target_all",
+    srcs = glob(["target/qnx/**/*"]),
+)
+
+filegroup(
     name = "target_dir",
     srcs = ["target/qnx"],
+)
+
+filegroup(
+    name = "mkifs",
+    srcs = ["host/linux/x86_64/usr/bin/mkifs"],
 )

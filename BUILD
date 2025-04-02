@@ -12,15 +12,6 @@
 # *******************************************************************************
 load("@score_cr_checker//:cr_checker.bzl", "copyright_checker")
 
-platform(
-    name = "x86_64_qnx",
-    constraint_values = [
-        "@platforms//cpu:x86_64",
-        "@platforms//os:qnx",
-    ],
-    visibility = ["//visibility:public"],
-)
-
 test_suite(
     name = "format.check",
     tests = ["//tools/format:format.check"],
@@ -38,7 +29,7 @@ copyright_checker(
         "BUILD",
         "MODULE.bazel",
         "tests",
-        "toolchain",
+        "toolchains",
         "tools",
     ] + glob([
         "*.bzl",

@@ -10,34 +10,26 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+#!/bin/bash
 
-load("@score_toolchains_qnx//rules/fs:ifs.bzl", "qnx_ifs")
+set -euo pipefail
 
-cc_binary(
-    name = "main_cpp",
-    srcs = ["main.cpp"],
-)
+QNX_HOST=$1
 
-cc_binary(
-    name = "main_c",
-    srcs = ["main.c"],
-)
+IFS_IMAGE=$2
 
-qnx_ifs(
-    name = "init",
-    build_file = "init.build",
-)
+qemu-system-x86_64 \
+                -smp 2 \
+                --enable-kvm \
+                --cpu host \
+                -m 1G \
+                -pidfile /tmp/qemu.pid \
+                -nographic \
+                -kernel "${IFS_IMAGE}" \
+                -serial mon:stdio \
+                -object rng-random,filename=/dev/urandom,id=rng0 \
+                -device virtio-rng-pci,rng=rng0 &
 
-sh_binary(
-    name = "run_qemu",
-    srcs = ["run_qemu.sh"],
-    args = [
-        "$(location @toolchains_qnx_sdp//:host_dir)",
-        "$(location :init)",
-    ],
-    data = [
-        ":init",
-        "@toolchains_qnx_sdp//:host_all",
-        "@toolchains_qnx_sdp//:host_dir",
-    ],
-)
+sleep 5
+
+kill $(cat /tmp/qemu.pid)

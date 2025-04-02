@@ -11,12 +11,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load(":rules.bzl", "qnx_toolchain")
+load("//toolchains:rules.bzl", "ifs_toolchain", "qcc_toolchain")
 
 def _impl(mctx):
     for mod in mctx.modules:
         if not mod.is_root:
-            fail("Only the root module can use the 'toolchain_qcc' extension")
+            fail("Only the root module can use the 'toolchains_qnx' extension")
 
         for sdp in mod.tags.sdp:
             name = sdp.name
@@ -27,22 +27,27 @@ def _impl(mctx):
             http_archive(
                 name = "%s_sdp" % name,
                 urls = [url],
-                build_file = "@score_toolchains_qnx//toolchain:sdp.BUILD",
+                build_file = "@score_toolchains_qnx//toolchains:sdp.BUILD",
                 sha256 = sha256,
                 strip_prefix = strip_prefix,
             )
 
-            qnx_toolchain(
-                name = name,
+            qcc_toolchain(
+                name = "%s_qcc" % name,
                 sdp_repo = "%s_sdp" % name,
             )
 
-toolchain_qcc = module_extension(
+            ifs_toolchain(
+                name = "%s_ifs" % name,
+                sdp_repo = "%s_sdp" % name,
+            )
+
+toolchains_qnx = module_extension(
     implementation = _impl,
     tag_classes = {
         "sdp": tag_class(
             attrs = {
-                "name": attr.string(default = "toolchain_qcc"),
+                "name": attr.string(default = "toolchains_qnx"),
                 "url": attr.string(mandatory = True),
                 "strip_prefix": attr.string(default = ""),
                 "sha256": attr.string(mandatory = True),
