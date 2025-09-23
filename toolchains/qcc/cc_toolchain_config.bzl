@@ -60,6 +60,12 @@ def _impl(ctx):
     dbg_feature = feature(name = "dbg")
     opt_feature = feature(name = "opt")
 
+    arch = ctx.attr.arch  # "x86_64" or "aarch64"
+
+    gcc_variant = ctx.attr.gcc_variant
+    qcc_version = ctx.attr.qcc_version  # e.g. "gcc_ntox86_64" or "gcc_ntoaarch64le"
+    gcc_variant_cxx = ctx.attr.gcc_variant_cxx
+
     assemble_action = action_config(
         action_name = ACTION_NAMES.assemble,
         tools = [tool(tool = ctx.executable.cc_binary)],
@@ -163,7 +169,7 @@ def _impl(ctx):
                 flag_groups = [
                     flag_group(
                         flags = [
-                            "-V12.2.0,gcc_ntox86_64",
+                            "-V%s,%s" % (qcc_version, gcc_variant),
                             "-fno-canonical-system-headers",
                         ],
                     ),
@@ -223,6 +229,13 @@ def _impl(ctx):
         name = "default_link_flags",
         enabled = True,
         flag_sets = [
+            # select the correct QNX C++ config for ALL link actions
+            flag_set(
+                actions = all_link_actions,
+                flag_groups = [
+                    flag_group(flags = ["-V%s,%s" % (qcc_version, gcc_variant_cxx)]),
+                ],
+            ),
             flag_set(
                 actions = all_link_actions,
                 flag_groups = [
@@ -447,23 +460,24 @@ def _impl(ctx):
 
     return cc_common.create_cc_toolchain_config_info(
         ctx = ctx,
-        abi_version = "x86_64-qnx8.0.0",
+        abi_version = "%s-qnx8.0.0" % arch,
         abi_libc_version = "unknown",
         compiler = "qcc",
         cxx_builtin_include_directories = cxx_builtin_include_directories,
         features = features,
         action_configs = action_configs,
         host_system_name = "local",
-        target_system_name = "x86_64-qnx",
-        target_cpu = "x86_64",
+        target_system_name = "%s-qnx" % arch,
+        target_cpu = arch,
         target_libc = "unknown",
-        toolchain_identifier = "x86_64-qnx8.0.0",
+        toolchain_identifier = "%s-qnx8.0.0" % arch,
     )
 
 cc_toolchain_config = rule(
     implementation = _impl,
     provides = [CcToolchainConfigInfo],
     attrs = {
+        # Shared SDP binaries/dirs (optional to use in the rule; kept for API compatibility)
         "ar_binary": attr.label(allow_single_file = True, executable = True, cfg = "exec", mandatory = True),
         "cc_binary": attr.label(allow_single_file = True, executable = True, cfg = "exec", mandatory = True),
         "cxx_binary": attr.label(allow_single_file = True, executable = True, cfg = "exec", mandatory = True),
@@ -471,5 +485,9 @@ cc_toolchain_config = rule(
         "qnx_host": attr.label(allow_single_file = True, mandatory = True),
         "qnx_target": attr.label(allow_single_file = True, mandatory = True),
         "cxx_builtin_include_directories": attr.label(allow_files = True, mandatory = True),
+        "arch": attr.string(values = ["x86_64", "aarch64"], mandatory = True),
+        "qcc_version": attr.string(default = "12.2.0"),
+        "gcc_variant": attr.string(mandatory = True),
+        "gcc_variant_cxx": attr.string(mandatory = True),
     },
 )

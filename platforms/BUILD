@@ -18,3 +18,12 @@ platform(
     ],
     visibility = ["//visibility:public"],
 )
+
+platform(
+    name = "aarch64-qnx8_0",
+    constraint_values = [
+        "@platforms//cpu:aarch64",
+        "@platforms//os:qnx",
+    ],
+    visibility = ["//visibility:public"],
+)

@@ -4,7 +4,7 @@
 #
 ###############################################################################
 
-[image=0x1400000]
+[image=0x400000]
 [virtual=x86_64,multiboot] boot = {
     # Use startup-x86 by default
     startup-x86 -v -D8250..115200 -zz
