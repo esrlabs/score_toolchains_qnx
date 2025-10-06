@@ -34,3 +34,19 @@ toolchain(
     toolchain = ":mkifs_toolchain",
     toolchain_type = "@score_toolchains_qnx//toolchains/fs/ifs:toolchain_type",
 )
+
+
+toolchain(
+    name = "ifs_aarch64",
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:aarch64",
+        "@platforms//os:qnx",
+    ],
+    toolchain = ":mkifs_toolchain",
+    toolchain_type = "@score_toolchains_qnx//toolchains/fs/ifs:toolchain_type",
+)
+

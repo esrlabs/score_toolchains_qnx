@@ -24,7 +24,7 @@ filegroup(
 )
 
 cc_toolchain_config(
-    name = "qcc_toolchain_config",
+    name = "qcc_toolchain_config_x86_64",
     ar_binary = "@%{toolchain_sdp}//:ar",
     cc_binary = "@%{toolchain_sdp}//:qcc",
     cxx_binary = "@%{toolchain_sdp}//:qpp",
@@ -32,6 +32,61 @@ cc_toolchain_config(
     qnx_host = "@%{toolchain_sdp}//:host_dir",
     qnx_target = "@%{toolchain_sdp}//:target_dir",
     cxx_builtin_include_directories = "@%{toolchain_sdp}//:cxx_builtin_include_directories",
+
+  # arch-specific flags (only difference)
+    arch = "x86_64",
+    qcc_version = "12.2.0",
+    gcc_variant = "gcc_ntox86_64",
+    gcc_variant_cxx = "gcc_ntox86_64_cxx",
+
+)
+
+cc_toolchain(
+    name = "qcc_toolchain_x86_64",
+    all_files = ":all_files",
+    ar_files = ":all_files",
+    as_files = ":all_files",
+    compiler_files = ":all_files",
+    dwp_files = ":empty",
+    linker_files = ":all_files",
+    objcopy_files = ":empty",
+    strip_files = ":all_files",
+    toolchain_config = ":qcc_toolchain_config_x86_64",
+)
+
+toolchain(
+    name = "qcc_x86_64",
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:qnx",
+    ],
+    toolchain = ":qcc_toolchain_x86_64",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+    visibility = [
+        "//:__pkg__",
+    ]
+)
+
+
+cc_toolchain_config(
+    name = "qcc_toolchain_config_aarch64",
+    ar_binary = "@%{toolchain_sdp}//:ar",
+    cc_binary = "@%{toolchain_sdp}//:qcc",
+    cxx_binary = "@%{toolchain_sdp}//:qpp",
+    strip_binary = "@%{toolchain_sdp}//:strip",
+    qnx_host = "@%{toolchain_sdp}//:host_dir",
+    qnx_target = "@%{toolchain_sdp}//:target_dir",
+    cxx_builtin_include_directories = "@%{toolchain_sdp}//:cxx_builtin_include_directories",
+    # only flags differ
+    arch = "aarch64",
+    qcc_version = "12.2.0",
+    gcc_variant = "gcc_ntoaarch64le",
+    gcc_variant_cxx = "gcc_ntoaarch64le_cxx",
+  
 )
 
 cc_toolchain(
@@ -44,17 +99,17 @@ cc_toolchain(
     linker_files = ":all_files",
     objcopy_files = ":empty",
     strip_files = ":all_files",
-    toolchain_config = ":qcc_toolchain_config",
+    toolchain_config = ":qcc_toolchain_config_aarch64",
 )
 
 toolchain(
-    name = "qcc_x86_64",
+    name = "qcc_aarch64",
     exec_compatible_with = [
         "@platforms//cpu:x86_64",
         "@platforms//os:linux",
     ],
     target_compatible_with = [
-        "@platforms//cpu:x86_64",
+        "@platforms//cpu:aarch64",
         "@platforms//os:qnx",
     ],
     toolchain = ":qcc_toolchain",

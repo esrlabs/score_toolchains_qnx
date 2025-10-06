@@ -17,7 +17,13 @@ def _qnx_ifs_impl(ctx):
     """
     inputs = []
     extra_build_files = []
-    out_ifs = ctx.actions.declare_file("{}.{}".format(ctx.attr.name, ctx.attr.extension))
+
+    # Choose output filename
+    out_name = ctx.attr.out if ctx.attr.out else "{}.{}".format(ctx.attr.name, ctx.attr.extension)
+    if "/" in out_name:
+        fail("qnx_ifs.out must be a filename without path components, got: {}".format(out_name))
+
+    out_ifs = ctx.actions.declare_file(out_name)
 
     ifs_tool_info = ctx.toolchains[QNX_FS_TOOLCHAIN].tool_info
 
@@ -27,6 +33,14 @@ def _qnx_ifs_impl(ctx):
     inputs.extend(ctx.files.srcs)
 
     args = ctx.actions.args()
+
+    # Add -r roots BEFORE the build file, resolved relative to the main build file’s dir
+    for r in ctx.attr.search_roots:
+        # Normalize relative to the main build file’s directory
+        root_path = main_build_file.dirname + ("/" + r if not r.startswith("/") else r)
+        args.add("-r")
+        args.add(root_path)
+
     args.add_all([
         main_build_file.path,
         out_ifs.path,
@@ -62,6 +76,14 @@ qnx_ifs = rule(
             allow_files = True,
             doc = "List of labels that are used by the `build_file`",
             allow_empty = True,
+        ),
+        "out": attr.string(
+            default = "",
+            doc = "Optional explicit output filename (no path). If empty, uses name + '.' + extension.",
+        ),
+        "search_roots": attr.string_list(
+            default = [],
+            doc = "List of paths for mkifs -r, each relative to the main build file's directory (or absolute).",
         ),
     },
 )
