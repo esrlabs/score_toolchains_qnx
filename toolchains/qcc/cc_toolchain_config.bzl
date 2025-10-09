@@ -180,6 +180,16 @@ def _impl(ctx):
                 flag_groups = [
                     flag_group(
                         flags = [
+                            "-D_QNX_SOURCE",
+                        ],
+                    ),
+                ],
+            ),
+            flag_set(
+                actions = all_cpp_compile_actions,
+                flag_groups = [
+                    flag_group(
+                        flags = [
                             "-std=c++17",
                         ],
                     ),
