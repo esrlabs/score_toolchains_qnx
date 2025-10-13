@@ -185,7 +185,7 @@ def _impl(ctx):
                     ),
                 ],
                 with_features = [
-                    with_feature_set(not_features = ["c++17", "c++20"]),
+                    with_feature_set(not_features = ["gnu++17", "gnu++20"]),
                 ],
             ),
             flag_set(
@@ -340,26 +340,26 @@ def _impl(ctx):
     )
 
     cxx17_feature = feature(
-        name = "c++17",
+        name = "gnu++17",
         provides = ["cxx_std"],
         flag_sets = [
             flag_set(
                 actions = all_cpp_compile_actions,
                 flag_groups = [
-                    flag_group(flags = ["-std=c++17"]),
+                    flag_group(flags = ["-std=gnu++17"]),
                 ],
             ),
         ],
     )
 
     cxx20_feature = feature(
-        name = "c++20",
+        name = "gnu++20",
         provides = ["cxx_std"],
         flag_sets = [
             flag_set(
                 actions = all_cpp_compile_actions,
                 flag_groups = [
-                    flag_group(flags = ["-std=c++20"]),
+                    flag_group(flags = ["-std=gnu++20"]),
                 ],
             ),
         ],
