@@ -46,12 +46,19 @@ def _qnx_ifs_impl(ctx):
         out_ifs.path,
     ])
 
+    #Add env variables for bazel labels/targets
+    env_to_append = {}
+    env_to_append = env_to_append | ifs_tool_info.env
+
+    for key, item in ctx.attr.ext_repo_maping.items():
+        env_to_append.update({key: ctx.expand_location(item)})
+
     ctx.actions.run(
         outputs = [out_ifs],
         inputs = inputs,
         arguments = [args],
         executable = ifs_tool_info.executable,
-        env = ifs_tool_info.env,
+        env = env_to_append,
         tools = ifs_tool_info.files,
     )
 
@@ -76,6 +83,11 @@ qnx_ifs = rule(
             allow_files = True,
             doc = "List of labels that are used by the `build_file`",
             allow_empty = True,
+        ),
+        "ext_repo_maping": attr.string_dict(
+            allow_empty = True,
+            default = {},
+            doc = "We are using dict to map env. variables with of external repository",
         ),
         "out": attr.string(
             default = "",
