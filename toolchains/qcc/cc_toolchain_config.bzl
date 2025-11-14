@@ -274,6 +274,7 @@ def _impl(ctx):
                         flags = [
                             "-Wall",
                             "-Wno-error=deprecated-declarations",
+                            "-Wno-error=mismatched-new-delete",  # see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=103993
                         ],
                     ),
                 ],
