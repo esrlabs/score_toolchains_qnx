@@ -27,6 +27,12 @@ build:x86_64-qnx --platforms=@score_toolchains_qnx//platforms:x86_64-qnx
 build:x86_64-qnx --sandbox_writable_path=/var/tmp
 ```
 
+USER .bazelrc
+In case of QNX floating license setting is necessary you have to define the right value in your user .bazelrc like:
+```
+common --action_env=QNXLM_LICENSE_FILE=<your_license_url>
+```
+
 ```/var/tmp``` needs to be writeable inside of the sandbox because of the license management done by the QNX tools.
 
 ## Where to obtain the QNX 8.0 SDP
