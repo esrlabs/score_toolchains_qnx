@@ -11,6 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@score_toolchains_qnx//rules/fs:ifs.bzl", "qnx_ifs")
 
 config_setting(
@@ -46,6 +47,22 @@ cc_binary(
     srcs = ["main.c"],
 )
 
+pkg_tar(
+    name = "main_cpp_as_pkg",
+    srcs = [
+        ":main_cpp",
+    ],
+    package_dir = "/some_directory",
+)
+
+pkg_tar(
+    name = "main_cpp_as_different_pkg",
+    srcs = [
+        ":main_cpp",
+    ],
+    package_dir = "/some_other_directory",
+)
+
 qnx_ifs(
     name = "init",
     # Only include the install tree as inputs on aarch64
@@ -69,6 +86,10 @@ qnx_ifs(
         ":is_qnx_aarch64": ["install"],  # relative to the .build file’s dir
         "//conditions:default": [],
     }),
+    tars = {
+        "EXAMPLE_KEY": ":main_cpp_as_pkg.tar",
+        "ANOTHER_KEY": ":main_cpp_as_different_pkg.tar",
+    },
 )
 
 sh_binary(

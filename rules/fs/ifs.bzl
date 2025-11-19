@@ -8,6 +8,30 @@ created IFS.
 """
 
 QNX_FS_TOOLCHAIN = "@score_toolchains_qnx//toolchains/fs/ifs:toolchain_type"
+TAR_TOOLCHAIN = "@tar.bzl//tar/toolchain:type"
+
+# todo: Consider to contribute this to "@tar.bzl"
+def _untar(ctx, tarball, output_folder):
+    tarball_as_list = tarball.files.to_list()
+    if len(tarball_as_list) > 1:
+        fail("Provided more then one tar-ball for one key.")
+    tarball = tarball_as_list[0]
+    bsdtar = ctx.toolchains[TAR_TOOLCHAIN]
+
+    args = ctx.actions.args()
+    args.add("-x")
+    args.add("-C").add(output_folder.path)
+    args.add("-f").add(tarball.path)
+
+    ctx.actions.run(
+        outputs = [output_folder],
+        inputs = [tarball],
+        arguments = [args],
+        executable = bsdtar.tarinfo.binary,
+        toolchain = TAR_TOOLCHAIN,
+        mnemonic = "Untar",
+        progress_message = "untar %{input}",
+    )
 
 def _qnx_ifs_impl(ctx):
     """ Implementation function of qnx_ifs rule.
@@ -53,6 +77,14 @@ def _qnx_ifs_impl(ctx):
     for key, item in ctx.attr.ext_repo_maping.items():
         env_to_append.update({key: ctx.expand_location(item)})
 
+    # Unpack tarballs and add locations as env variables
+    for key, tarball in ctx.attr.tars.items():
+        unpacked_tarball = ctx.actions.declare_directory("{}_{}".format(ctx.attr.name, key))
+        _untar(ctx, tarball, unpacked_tarball)
+
+        env_to_append.update({key: unpacked_tarball.path})
+        inputs.append(unpacked_tarball)
+
     ctx.actions.run(
         outputs = [out_ifs],
         inputs = inputs,
@@ -68,7 +100,7 @@ def _qnx_ifs_impl(ctx):
 
 qnx_ifs = rule(
     implementation = _qnx_ifs_impl,
-    toolchains = [QNX_FS_TOOLCHAIN],
+    toolchains = [QNX_FS_TOOLCHAIN, TAR_TOOLCHAIN],
     attrs = {
         "build_file": attr.label(
             allow_single_file = True,
@@ -88,6 +120,11 @@ qnx_ifs = rule(
             allow_empty = True,
             default = {},
             doc = "We are using dict to map env. variables with of external repository",
+        ),
+        "tars": attr.string_keyed_label_dict(
+            allow_files = [".tar"],
+            doc = "A map of tar-balls that can be added to the IFS image. The key will be available als variable in the `IFS Build File`, to determine where it should be packaged. e.g. `FOO: '//:my_tar'` can be packaged as /SOME_DIR=${FOO}.",
+            allow_empty = True,
         ),
         "out": attr.string(
             default = "",

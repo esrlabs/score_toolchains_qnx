@@ -54,3 +54,6 @@ devc-ser8250
 [type=link] ls=toybox
 [type=link] rm=toybox
 
+/some_directory=${EXAMPLE_KEY}
+/another_directory=${ANOTHER_KEY}
+

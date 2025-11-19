@@ -46,3 +46,5 @@ archive_override(
         "https://github.com/qorix-group/custom-qemu/releases/download/1.0.0/custom_qemu.tar.gz",
     ],
 )
+
+bazel_dep(name = "rules_pkg", version = "1.1.0")
