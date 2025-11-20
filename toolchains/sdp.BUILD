@@ -72,3 +72,64 @@ filegroup(
     name = "mkifs",
     srcs = ["host/linux/x86_64/usr/bin/mkifs"],
 )
+
+
+# AARCH64
+filegroup(
+    name = "aarch64_all_files",
+    srcs = glob(["*/**/*"]),
+)
+
+filegroup(
+    name = "aarch64_cxx_builtin_include_directories",
+    srcs = [
+        "host/linux/x86_64/usr/lib/gcc/aarch64-unknown-nto-qnx8.0.0/12.2.0/include",
+        "target/qnx/usr/include",
+        "target/qnx/usr/include/c++/v1",
+    ],
+)
+
+filegroup(
+    name = "aarch64_ar",
+    srcs = ["host/linux/x86_64/usr/bin/aarch64-unknown-nto-qnx8.0.0-ar"],
+)
+
+filegroup(
+    name = "aarch64_qcc",
+    srcs = ["host/linux/x86_64/usr/bin/qcc"],
+)
+
+filegroup(
+    name = "aarch64_qpp",
+    srcs = ["host/linux/x86_64/usr/bin/q++"],
+)
+
+filegroup(
+    name = "aarch64_strip",
+    srcs = ["host/linux/x86_64/usr/bin/aarch64-unknown-nto-qnx8.0.0-strip"],
+)
+
+filegroup(
+    name = "aarch64_host_all",
+    srcs = glob(["host/linux/x86_64/**/*"]),
+)
+
+filegroup(
+    name = "aarch64_host_dir",
+    srcs = ["host/linux/x86_64"],
+)
+
+filegroup(
+    name = "aarch64_target_all",
+    srcs = glob(["target/qnx/**/*"]),
+)
+
+filegroup(
+    name = "aarch64_target_dir",
+    srcs = ["target/qnx"],
+)
+
+filegroup(
+    name = "aarch64_mkifs",
+    srcs = ["host/linux/x86_64/usr/bin/mkifs"],
+)

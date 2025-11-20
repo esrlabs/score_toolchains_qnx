@@ -21,6 +21,15 @@ qnx_fs_toolchain_config(
     target = "@%{toolchain_sdp}//:target_all",
 )
 
+qnx_fs_toolchain_config(
+    name = "mkifs_toolchain_aarch64",
+    executable = "@%{toolchain_sdp}//:aarch64_mkifs",
+    host_dir = "@%{toolchain_sdp}//:aarch64_host_dir",
+    target_dir = "@%{toolchain_sdp}//:aarch64_target_dir",
+    host = "@%{toolchain_sdp}//:aarch64_host_all",
+    target = "@%{toolchain_sdp}//:aarch64_target_all",
+)
+
 toolchain(
     name = "ifs_x86_64",
     exec_compatible_with = [
@@ -46,7 +55,7 @@ toolchain(
         "@platforms//cpu:aarch64",
         "@platforms//os:qnx",
     ],
-    toolchain = ":mkifs_toolchain",
+    toolchain = ":mkifs_toolchain_aarch64",
     toolchain_type = "@score_toolchains_qnx//toolchains/fs/ifs:toolchain_type",
 )
 
