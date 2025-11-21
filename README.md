@@ -18,13 +18,23 @@ use_repo(toolchains_qnx, "toolchains_qnx_sdp")
 use_repo(toolchains_qnx, "toolchains_qnx_qcc")
 
 register_toolchains("@toolchains_qnx_qcc//:qcc_x86_64")
+register_toolchains("@toolchains_qnx_qcc//:qcc_aarch64")
 ```
+
+>NOTE: registering toolchains above may make your life harder if you will need to use multiple
+toolchains targeting same `arch` and `os` but with different SDP. In such case you may use
+`build:x86_64-qnx --extra_toolchains=@toolchains_qnx_qcc//:qcc_x86_64` to register toolchain 
+only for certain build config.
 
 .bazelrc
 ```
 build:x86_64-qnx --incompatible_strict_action_env
 build:x86_64-qnx --platforms=@score_toolchains_qnx//platforms:x86_64-qnx
 build:x86_64-qnx --sandbox_writable_path=/var/tmp
+
+build:aarch64-qnx8 --incompatible_strict_action_env
+build:aarch64-qnx8 --platforms=@score_toolchains_qnx//platforms:aarch64-qnx8_0
+build:aarch64-qnx8 --sandbox_writable_path=/var/tmp
 ```
 
 USER .bazelrc
